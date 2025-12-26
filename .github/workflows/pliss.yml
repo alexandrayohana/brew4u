@@ -1,0 +1,42 @@
+name: OO Metrics with CK (Build from Source)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  ck-metrics:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout project repository
+      uses: actions/checkout@v4
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Install Maven
+      run: sudo apt-get update && sudo apt-get install -y maven
+
+    - name: Clone CK source code
+      run: git clone https://github.com/mauricioaniche/ck.git
+
+    - name: Build CK from source
+      run: |
+        cd ck
+        mvn clean package -DskipTests
+
+    - name: Run CK on project source code
+      run: |
+        java -jar ck/target/ck-*.jar .
+
+    - name: Upload CK results
+      uses: actions/upload-artifact@v4
+      with:
+        name: ck-metrics-result
+        path: |
+          *.csv
