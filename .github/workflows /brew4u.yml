@@ -1,0 +1,35 @@
+name: OO Metrics with CK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  ck-metrics:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Download CK
+      run: |
+        wget https://github.com/mauricioaniche/ck/releases/download/0.7.1/ck-0.7.1-jar-with-dependencies.jar -O ck.jar
+
+    - name: Run CK
+      run: |
+        java -jar ck.jar .
+
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      with:
+        name: ck-metrics-result
+        path: |
+          *.csv
