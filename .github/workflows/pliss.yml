@@ -32,7 +32,7 @@ jobs:
 
     - name: Run CK on project source code
       run: |
-        java -jar ck/target/ck-*.jar .
+      java -jar ck/target/ck-0.7.1-SNAPSHOT.jar .
 
     - name: Upload CK results
       uses: actions/upload-artifact@v4
